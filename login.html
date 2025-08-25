@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Admin Login</h2>
+  <form onsubmit="login(event)">
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="password" id="pin" placeholder="PIN" required />
+    <button type="submit">Login</button>
+  </form>
+  <script>
+    function login(e){
+      e.preventDefault();
+      const u=document.getElementById("username").value;
+      const p=document.getElementById("pin").value;
+      if(u==="BROWNIEBITES" && p==="BROWNIEbites@463235_6432"){
+        localStorage.setItem("admin","true");
+        window.location.href="admin.html";
+      } else {
+        alert("Invalid login");
+      }
+    }
+  </script>
+</body>
+</html>

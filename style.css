@@ -1,0 +1,4 @@
+body { font-family: Arial; margin:20px; background:#fff3e6; }
+h1,h2 { text-align:center; }
+#menu-items { display:flex; flex-wrap:wrap; gap:10px; }
+.menu-item { border:1px solid #ccc; padding:10px; background:#fff; width:200px; }

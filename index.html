@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brownie Bites - Order Now</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="firebaseConfig.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Brownie Bites</h1>
+    <h2>Freshly Baked Happiness</h2>
+  </header>
+
+  <section id="menu">
+    <h2>Menu</h2>
+    <div id="menu-items"></div>
+  </section>
+
+  <section id="order-form">
+    <h2>Place Your Order</h2>
+    <form id="orderForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="text" id="phone" placeholder="Phone Number" required />
+      <input type="email" id="email" placeholder="Email (optional)" />
+      <textarea id="address" placeholder="Delivery Address" required></textarea>
+      
+      <h3>Payment Method</h3>
+      <select id="paymentMethod" required>
+        <option value="">--Select Payment Method--</option>
+        <option value="upi">UPI</option>
+        <option value="fampay">FamPay</option>
+        <option value="gpay">Google Pay</option>
+        <option value="phonepe">PhonePe</option>
+        <option value="cod">Cash on Delivery</option>
+      </select>
+      
+      <button type="submit">Proceed to Pay</button>
+    </form>
+  </section>
+</body>
+</html>
