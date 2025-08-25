@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Panel</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Brownie Bites</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script src="firebaseConfig.js"></script>
-  <script src="admin.js" defer></script>
 </head>
 <body>
-  <h1>Admin Panel</h1>
+  <h1>Admin Dashboard</h1>
   <button onclick="logout()">Logout</button>
-  <h2>Orders</h2>
   <div id="orders"></div>
-  <h2>Add New Menu Item</h2>
+  <h2>Add Menu Item</h2>
   <form id="menuForm">
-    <input type="text" id="itemName" placeholder="Item Name" required />
-    <input type="number" id="itemPrice" placeholder="Price" required />
-    <input type="text" id="itemImage" placeholder="Image URL" />
+    <input type="text" id="itemName" placeholder="Item Name" required>
+    <input type="number" id="itemPrice" placeholder="Price" required>
+    <input type="text" id="itemImage" placeholder="Image URL (optional)">
     <button type="submit">Add Item</button>
   </form>
+
+  <script src="admin.js"></script>
 </body>
 </html>

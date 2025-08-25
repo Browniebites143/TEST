@@ -1,32 +1,45 @@
-document.addEventListener("DOMContentLoaded",()=>{
-  if(!localStorage.getItem("admin")){ window.location.href="login.html"; }
-  const db = firebase.database();
-  const ordersDiv=document.getElementById("orders");
-  db.ref("orders").on("value",snap=>{
-    ordersDiv.innerHTML="";
-    snap.forEach(o=>{
-      const val=o.val();
-      const div=document.createElement("div");
-      div.className="order";
-      div.innerHTML=`<h3>${val.id}</h3><p>${val.name} - ${val.phone}</p>
-      <p>Status: <input value="${val.status}" onchange="updateOrder('${val.id}','status',this.value)" /></p>
-      <p>Payment: <input value="${val.paymentStatus}" onchange="updateOrder('${val.id}','paymentStatus',this.value)" /></p>
-      <button onclick="deleteOrder('${val.id}')">Delete</button>`;
-      ordersDiv.appendChild(div);
-    });
+if(!localStorage.getItem("adminLoggedIn")){
+  window.location.href="login.html";
+}
+function logout(){
+  localStorage.removeItem("adminLoggedIn");
+  window.location.href="login.html";
+}
+const ordersDiv = document.getElementById("orders");
+firebase.database().ref("orders").on("value", snapshot => {
+  ordersDiv.innerHTML = "";
+  snapshot.forEach(orderSnap => {
+    const order = orderSnap.val();
+    const div = document.createElement("div");
+    div.innerHTML = `<h3>${order.orderId}</h3>
+      <p>${order.name} - ${order.phone}</p>
+      <p>Address: ${order.address}</p>
+      <p>Status: ${order.status}</p>
+      <p>Payment: ${order.paymentStatus}</p>
+      <button onclick="updateStatus('${order.orderId}','Preparing')">Preparing</button>
+      <button onclick="updateStatus('${order.orderId}','Out for Delivery')">Out for Delivery</button>
+      <button onclick="updateStatus('${order.orderId}','Delivered')">Delivered</button>
+      <button onclick="updatePayment('${order.orderId}','Paid')">Mark Paid</button>
+      <button onclick="deleteOrder('${order.orderId}')">Delete</button>`;
+    ordersDiv.appendChild(div);
   });
+});
 
-  window.updateOrder=function(id,field,value){ db.ref("orders/"+id+"/"+field).set(value); }
-  window.deleteOrder=function(id){ db.ref("orders/"+id).remove(); }
-  window.logout=function(){ localStorage.removeItem("admin"); window.location.href="login.html"; }
+function updateStatus(orderId,status){
+  firebase.database().ref("orders/"+orderId).update({status});
+}
+function updatePayment(orderId,paymentStatus){
+  firebase.database().ref("orders/"+orderId).update({paymentStatus});
+}
+function deleteOrder(orderId){
+  firebase.database().ref("orders/"+orderId).remove();
+}
 
-  document.getElementById("menuForm").addEventListener("submit",e=>{
-    e.preventDefault();
-    const name=document.getElementById("itemName").value;
-    const price=document.getElementById("itemPrice").value;
-    const image=document.getElementById("itemImage").value;
-    const id="M"+Date.now();
-    db.ref("menu/"+id).set({id,name,price,image});
-    e.target.reset();
-  });
+document.getElementById("menuForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const name = document.getElementById("itemName").value;
+  const price = document.getElementById("itemPrice").value;
+  const image = document.getElementById("itemImage").value;
+  const id = "M"+Date.now();
+  firebase.database().ref("menu/"+id).set({name,price,image});
 });

@@ -1,10 +1,13 @@
-# Brownie Bites Ordering System
-- index.html: Customer ordering page
-- thankyou.html: Confirmation with order ID
-- track.html: Track orders
-- login.html: Admin login
-- admin.html: Admin dashboard (edit/delete orders, manage menu)
-- style.css: Styling
-- script.js: Frontend logic
-- admin.js: Admin logic
-- firebaseConfig.js: Firebase keys (already included)
+# Brownie Bites Ordering Website
+
+Features:
+- Customer can order products (menu from Firebase)
+- Order ID generated automatically
+- Payment via UPI apps (Google Pay, PhonePe, Paytm, FamPay, BHIM) or COD
+- Thank you + Track Order page with auto order ID
+- Admin can login, view orders, update status, update payment, delete orders, and add menu items
+- Firebase Realtime Database integration
+
+## Login Credentials
+- Username: admin
+- PIN: admin123

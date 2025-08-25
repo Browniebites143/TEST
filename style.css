@@ -1,4 +1,3 @@
-body { font-family: Arial; margin:20px; background:#fff3e6; }
-h1,h2 { text-align:center; }
-#menu-items { display:flex; flex-wrap:wrap; gap:10px; }
-.menu-item { border:1px solid #ccc; padding:10px; background:#fff; width:200px; }
+body { font-family: Arial, sans-serif; margin:20px; }
+h1.brand { font-family: Ravie, cursive; color: brown; }
+form input, form textarea, form select { display:block; margin:10px 0; padding:8px; width:100%; max-width:400px; }

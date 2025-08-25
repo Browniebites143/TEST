@@ -1,31 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Track Order</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Order - Brownie Bites</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <script src="firebaseConfig.js"></script>
+</head>
+<body>
+  <h1>Track Your Order</h1>
+  <p>Order ID: <span id="orderId"></span></p>
+  <p>Status: <span id="status"></span></p>
+  <p>Payment: <span id="payment"></span></p>
+
   <script>
-    function trackOrder() {
-      const orderId = document.getElementById("trackId").value;
-      const db = firebase.database();
-      db.ref("orders/" + orderId).once("value").then(snapshot => {
-        if(snapshot.exists()) {
-          const order = snapshot.val();
-          document.getElementById("status").textContent = 
-            "Order Status: " + order.status + " | Payment: " + order.paymentStatus;
-        } else {
-          document.getElementById("status").textContent = "Order not found";
+    const orderId = localStorage.getItem("lastOrderId");
+    document.getElementById("orderId").innerText = orderId || "N/A";
+
+    if(orderId){
+      firebase.database().ref("orders/"+orderId).on("value", snapshot => {
+        const data = snapshot.val();
+        if(data){
+          document.getElementById("status").innerText = data.status || "Pending";
+          document.getElementById("payment").innerText = data.paymentStatus || "Unpaid";
         }
       });
     }
   </script>
-</head>
-<body>
-  <h1>Track Your Order</h1>
-  <input type="text" id="trackId" placeholder="Enter Order ID" />
-  <button onclick="trackOrder()">Track</button>
-  <p id="status"></p>
 </body>
 </html>
