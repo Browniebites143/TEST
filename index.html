@@ -1,43 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Brownie Bites - Order</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brownie Bite — Order Online</title>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Firebase v8 (CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="firebaseConfig.js"></script>
 </head>
 <body>
   <header>
-    <h1 class="brand">Brownie Bites</h1>
+    <div class="brand">Brownie Bite</div>
+    <div class="tag">Freshly baked • Homemade with love • Delivered to your door</div>
   </header>
 
-  <main>
-    <h2>Menu</h2>
-    <div id="menu"></div>
+  <main class="container">
+    <section class="card">
+      <h2>Place Your Order</h2>
+      <form id="orderForm">
+        <div class="row">
+          <div>
+            <label for="name">Name *</label>
+            <input id="name" required/>
+          </div>
+          <div>
+            <label for="phone">Phone *</label>
+            <input id="phone" inputmode="tel" pattern="[0-9+\-() ]{7,}" required/>
+          </div>
+        </div>
 
-    <h2>Your Details</h2>
-    <form id="orderForm">
-      <input type="text" id="name" placeholder="Your Name" required><br>
-      <input type="text" id="phone" placeholder="Mobile Number" required><br>
-      <input type="email" id="email" placeholder="Email (optional)"><br>
-      <textarea id="address" placeholder="Delivery Address" required></textarea><br>
-      
-      <h3>Payment Method</h3>
-      <select id="paymentMethod" required>
-        <option value="cod">Cash on Delivery</option>
-        <option value="gpay">Google Pay</option>
-        <option value="phonepe">PhonePe</option>
-        <option value="paytm">Paytm</option>
-        <option value="fampay">FamPay</option>
-        <option value="bhim">BHIM UPI</option>
-      </select><br><br>
+        <label for="address">Address *</label>
+        <textarea id="address" required></textarea>
 
-      <button type="submit">Place Order</button>
-    </form>
+        <label for="email">Email (optional)</label>
+        <input id="email" type="email" placeholder="name@example.com"/>
+
+        <div class="row">
+          <div>
+            <label for="product">Product *</label>
+            <select id="product" required>
+              <option value="Classic" data-price="40">Classic Brownie — ₹40</option>
+              <option value="Walnut" data-price="50">Walnut Brownie — ₹50</option>
+              <option value="Oreo" data-price="50">Oreo Brownie — ₹50</option>
+              <option value="ChocoChip" data-price="50">Choco‑chip Brownie — ₹50</option>
+            </select>
+          </div>
+          <div>
+            <label for="qty">Quantity *</label>
+            <input id="qty" type="number" min="1" value="1" required/>
+          </div>
+        </div>
+
+        <p class="price-line">Total: <span id="totalAmt">₹40</span></p>
+        <p class="small">Pricing auto‑updates when you change product or quantity.</p>
+
+        <hr class="soft"/>
+
+        <label>Payment Method *</label>
+        <div class="pay-grid">
+          <button type="button" class="btn btn-secondary pay-btn" data-app="gpay">Pay with GPay</button>
+          <button type="button" class="btn btn-secondary pay-btn" data-app="phonepe">Pay with PhonePe</button>
+          <button type="button" class="btn btn-secondary pay-btn" data-app="paytm">Pay with Paytm</button>
+          <button type="button" class="btn btn-secondary pay-btn" data-app="fampay">Pay with FamPay</button>
+          <button type="button" class="btn" id="codBtn">Cash on Delivery (COD)</button>
+        </div>
+        <div class="notice small">Note: Some iOS browsers may ask which app to open for UPI links.</div>
+
+        <div class="actions" style="margin-top:12px">
+          <button type="submit" class="btn" id="placeBtn">🍫 Place Order</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" style="margin-top:18px">
+      <h2>Track Your Order</h2>
+      <div class="row">
+        <input id="trackId" placeholder="Enter Order ID e.g. BB-20250101-1234"/>
+        <button class="btn btn-secondary" id="trackBtn">Check Status</button>
+      </div>
+      <p id="trackResult" class="price-line"></p>
+    </section>
   </main>
+
+  <footer>
+    © 2025 Brownie Bite • Happiness in every bite
+  </footer>
+
+  <!-- Thank You Modal (used for COD immediate feedback) -->
+  <div id="thanksModal">
+    <div class="modal-card">
+      <h3>Thank you! 🎉</h3>
+      <p>Your order has been placed.</p>
+      <p><b>Order ID:</b> <span id="popOrderId"></span></p>
+      <p class="small">Use this ID in <b>Track Your Order</b> to see live status.</p>
+      <div class="actions">
+        <a href="thankyou.html" class="btn">Go to Thank You</a>
+        <button class="btn btn-secondary" id="closeModal">Close</button>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

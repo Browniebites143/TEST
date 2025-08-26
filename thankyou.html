@@ -1,19 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Thank You - Brownie Bites</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thanks — Brownie Bite</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <h1>Thank You for Your Order!</h1>
-  <p>Your Order ID is: <span id="orderId"></span></p>
-  <a href="track.html">Track Your Order</a>
-
+  <header>
+    <div class="brand">Brownie Bite</div>
+    <div class="tag">Freshly baked • Delivered with love</div>
+  </header>
+  <main class="container">
+    <section class="card">
+      <h2>Thank you for your order 🎉</h2>
+      <p>Your order has been received.</p>
+      <p><b>Order ID:</b> <span id="orderIdView"></span></p>
+      <p class="small">Keep this ID safe. You can track your order status on the home page.</p>
+      <div class="actions">
+        <a class="btn" href="index.html">Back to Home</a>
+      </div>
+    </section>
+  </main>
+  <footer>© 2025 Brownie Bite</footer>
   <script>
-    const orderId = localStorage.getItem("lastOrderId");
-    document.getElementById("orderId").innerText = orderId || "N/A";
+    (function(){
+      const p = new URLSearchParams(location.search);
+      const id = p.get('orderId') || '—';
+      document.getElementById('orderIdView').textContent = id;
+    })();
   </script>
 </body>
 </html>

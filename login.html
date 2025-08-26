@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login - Brownie Bites</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login — Brownie Bite</title>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-  <h1>Admin Login</h1>
-  <form id="loginForm">
-    <input type="text" id="username" placeholder="Username" required><br>
-    <input type="password" id="pin" placeholder="PIN" required><br>
-    <button type="submit">Login</button>
-  </form>
+  <header>
+    <div class="brand">Brownie Bite</div>
+    <div class="tag">Admin Access</div>
+  </header>
+  <main class="container">
+    <section class="card" style="max-width:520px;margin:0 auto">
+      <h2>Admin Login</h2>
+      <label>Username</label>
+      <input id="u" placeholder="username"/>
+      <label>Pin</label>
+      <input id="p" type="password" placeholder="pin"/>
+      <div class="actions">
+        <button class="btn" id="loginBtn">Login</button>
+      </div>
+      <p class="small">Hint: Use the username & pin we set.</p>
+    </section>
+  </main>
   <script>
-    document.getElementById("loginForm").addEventListener("submit", function(e){
-      e.preventDefault();
-      const user = document.getElementById("username").value;
-      const pin = document.getElementById("pin").value;
-      if(user === "admin" && pin === "admin123"){
-        localStorage.setItem("adminLoggedIn", true);
-        window.location.href="admin.html";
+    const USERNAME = "BROWNIE BITES";
+    const PIN = "BROWNIEbites@463235_6432";
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const u = document.getElementById('u').value.trim();
+      const p = document.getElementById('p').value.trim();
+      if(u === USERNAME && p === PIN){
+        sessionStorage.setItem('adminLoggedIn','true');
+        location.href = 'admin.html';
       } else {
-        alert("Invalid credentials!");
+        alert('Invalid credentials');
       }
     });
   </script>
