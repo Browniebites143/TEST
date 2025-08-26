@@ -1,42 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Login — Brownie Bite</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login • Brownie Bite</title>
+  <link rel="stylesheet" href="style.css">
+  <style>@font-face{font-family:'Ravie';src:local('Ravie');font-display:swap}</style>
 </head>
 <body>
-  <header>
+<header>
+  <div class="container" style="padding:0">
     <div class="brand">Brownie Bite</div>
     <div class="tag">Admin Access</div>
-  </header>
-  <main class="container">
-    <section class="card" style="max-width:520px;margin:0 auto">
-      <h2>Admin Login</h2>
-      <label>Username</label>
-      <input id="u" placeholder="username"/>
-      <label>Pin</label>
-      <input id="p" type="password" placeholder="pin"/>
-      <div class="actions">
-        <button class="btn" id="loginBtn">Login</button>
-      </div>
-      <p class="small">Hint: Use the username & pin we set.</p>
-    </section>
-  </main>
-  <script>
-    const USERNAME = "BROWNIE BITES";
-    const PIN = "BROWNIEbites@463235_6432";
-    document.getElementById('loginBtn').addEventListener('click', () => {
-      const u = document.getElementById('u').value.trim();
-      const p = document.getElementById('p').value.trim();
-      if(u === USERNAME && p === PIN){
-        sessionStorage.setItem('adminLoggedIn','true');
-        location.href = 'admin.html';
-      } else {
-        alert('Invalid credentials');
-      }
-    });
-  </script>
+  </div>
+</header>
+<main class="container">
+  <section class="card" style="max-width:520px;margin:0 auto">
+    <h2>Login</h2>
+    <label for="username">Username</label>
+    <input id="username" placeholder="Enter username">
+    <label for="pin">PIN</label>
+    <input id="pin" placeholder="Enter PIN" type="password">
+    <div class="actions" style="margin-top:12px">
+      <button id="loginBtn" class="btn">Sign in</button>
+    </div>
+    <p id="msg" class="small"></p>
+  </section>
+</main>
+<footer>© 2025 Brownie Bite</footer>
+<script>
+  // Credentials (from your latest instruction)
+  const VALID_USER = "BROWNIE BITES";
+  const VALID_PIN  = "BROWNIEbites@463235_6432";
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('pin').value.trim();
+    if(u === VALID_USER && p === VALID_PIN){
+      sessionStorage.setItem('adminLoggedIn','true');
+      location.href = 'admin.html';
+    }else{
+      document.getElementById('msg').textContent = "Invalid credentials.";
+    }
+  });
+</script>
 </body>
 </html>

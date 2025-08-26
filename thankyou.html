@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Thanks — Brownie Bite</title>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You • Brownie Bite</title>
+  <link rel="stylesheet" href="style.css">
+  <style>@font-face{font-family:'Ravie';src:local('Ravie');font-display:swap}</style>
 </head>
 <body>
-  <header>
+<header>
+  <div class="container" style="padding:0">
     <div class="brand">Brownie Bite</div>
     <div class="tag">Freshly baked • Delivered with love</div>
-  </header>
-  <main class="container">
-    <section class="card">
-      <h2>Thank you for your order 🎉</h2>
-      <p>Your order has been received.</p>
-      <p><b>Order ID:</b> <span id="orderIdView"></span></p>
-      <p class="small">Keep this ID safe. You can track your order status on the home page.</p>
-      <div class="actions">
-        <a class="btn" href="index.html">Back to Home</a>
-      </div>
-    </section>
-  </main>
-  <footer>© 2025 Brownie Bite</footer>
-  <script>
-    (function(){
-      const p = new URLSearchParams(location.search);
-      const id = p.get('orderId') || '—';
-      document.getElementById('orderIdView').textContent = id;
-    })();
-  </script>
+  </div>
+</header>
+<main class="container">
+  <section class="card">
+    <h2>Thank you for your order 🎉</h2>
+    <p>Your Order ID is <b id="oid">—</b>.</p>
+    <p class="small">Keep this safe — you’ll need it to track your order.</p>
+    <a href="index.html" class="btn">Back to Home</a>
+  </section>
+</main>
+<footer>© 2025 Brownie Bite</footer>
+<script>
+  const p = new URLSearchParams(location.search);
+  const id = p.get('id') || '—';
+  document.getElementById('oid').textContent = id;
+</script>
 </body>
 </html>

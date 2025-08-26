@@ -1,105 +1,90 @@
-// admin.js — admin panel logic
+
+/* Brownie Bite - Admin logic */
 (function(){
-  if(sessionStorage.getItem('adminLoggedIn') !== 'true'){
+  if(sessionStorage.getItem('adminLoggedIn')!=='true'){
     window.location.href = 'login.html';
     return;
   }
-
-  firebase.initializeApp(window.FB_CONFIG);
+  if(!window.firebase || !window.firebaseConfig){
+    alert('Firebase not loaded');
+    return;
+  }
+  firebase.initializeApp(window.firebaseConfig);
   const db = firebase.database();
-  const tbody = document.getElementById('ordersBody');
-  const logoutBtn = document.getElementById('logoutBtn');
+
+  const $ = (sel,root=document)=>root.querySelector(sel);
+  const tbody = $('#ordersTable tbody');
+  const logoutBtn = $('#logoutBtn');
   logoutBtn.addEventListener('click', ()=>{
     sessionStorage.removeItem('adminLoggedIn');
-    window.location.href = 'login.html';
+    location.href = 'login.html';
   });
 
-  function fmt(t){
-    const d = new Date(t);
-    const pad = n=>String(n).padStart(2,'0');
-    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
-
-  function rowTemplate(key, v){
-    const paidClass = /Paid/i.test(v.paymentStatus||'') ? 'paid':'pending';
-    return `<tr data-key="${key}">
-      <td>${v.orderId||'-'}</td>
-      <td>${v.name||'-'}</td>
-      <td>${v.phone||'-'}</td>
-      <td>${v.address||'-'}</td>
-      <td>${v.product||'-'}</td>
-      <td>${v.qty||0}</td>
-      <td>${(v.total||0).toFixed? v.total.toFixed(2).replace(/\.00$/,'') : v.total}</td>
+  function row(o){
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${new Date(o.createdAt).toLocaleString()}</td>
+      <td><code>${o.orderId}</code></td>
+      <td>${o.name}</td>
+      <td>${o.phone}</td>
+      <td style="max-width:280px">${o.address}</td>
+      <td>${o.product}</td>
+      <td>${o.qty}</td>
+      <td>₹${o.total}</td>
       <td>
-        <select class="paySel">
-          <option ${v.paymentStatus==='Pending (COD)'?'selected':''}>Pending (COD)</option>
-          <option ${v.paymentStatus==='Pending (UPI)'?'selected':''}>Pending (UPI)</option>
-          <option ${v.paymentStatus==='Paid'?'selected':''}>Paid</option>
-        </select>
-        <span class="badge ${paidClass}" style="margin-left:6px">${v.paymentStatus||'-'}</span>
-      </td>
-      <td>
-        <select class="statSel">
-          <option ${v.orderStatus==='Pending'?'selected':''}>Pending</option>
-          <option ${v.orderStatus==='Preparing'?'selected':''}>Preparing</option>
-          <option ${v.orderStatus==='Prepared'?'selected':''}>Prepared</option>
-          <option ${v.orderStatus==='Out for Delivery'?'selected':''}>Out for Delivery</option>
-          <option ${v.orderStatus==='Delivered'?'selected':''}>Delivered</option>
-          <option ${v.orderStatus==='Cancelled'?'selected':''}>Cancelled</option>
+        <select data-field="paymentStatus">
+          <option ${o.paymentStatus==='Pending'?'selected':''}>Pending</option>
+          <option ${o.paymentStatus==='Paid'?'selected':''}>Paid</option>
+          <option ${o.paymentStatus==='COD'?'selected':''}>COD</option>
         </select>
       </td>
-      <td>${v.createdAt? fmt(v.createdAt): '-'}</td>
       <td>
-        <button class="btn btn-secondary saveBtn">Save</button>
-        <button class="btn btn-danger delBtn">Delete</button>
+        <select data-field="orderStatus">
+          <option ${o.orderStatus==='Pending'?'selected':''}>Pending</option>
+          <option ${o.orderStatus==='Preparing'?'selected':''}>Preparing</option>
+          <option ${o.orderStatus==='Prepared'?'selected':''}>Prepared</option>
+          <option ${o.orderStatus==='Out for delivery'?'selected':''}>Out for delivery</option>
+          <option ${o.orderStatus==='Delivered'?'selected':''}>Delivered</option>
+          <option ${o.orderStatus==='Cancelled'?'selected':''}>Cancelled</option>
+        </select>
       </td>
-    </tr>`;
+      <td>
+        <button class="btn-secondary" data-act="save">Save</button>
+        <button class="btn-danger" data-act="del">Delete</button>
+      </td>
+    `;
+    tr.dataset.id = o.orderId;
+    return tr;
   }
 
-  function bindRow(tr, key){
-    const paySel = tr.querySelector('.paySel');
-    const statSel = tr.querySelector('.statSel');
-    const saveBtn = tr.querySelector('.saveBtn');
-    const delBtn = tr.querySelector('.delBtn');
-    const badge = tr.querySelector('.badge');
+  // live listener
+  db.ref('orders').on('value', snap => {
+    tbody.innerHTML = '';
+    const data = snap.val() || {};
+    // sort by createdAt desc
+    const list = Object.values(data).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+    list.forEach(o => tbody.appendChild(row(o)));
+  });
 
-    paySel.addEventListener('change', ()=>{
-      badge.textContent = paySel.value;
-      badge.className = 'badge ' + (/Paid/i.test(paySel.value)?'paid':'pending');
-    });
-
-    saveBtn.addEventListener('click', async ()=>{
-      const updates = {
-        paymentStatus: paySel.value,
-        orderStatus: statSel.value
-      };
-      await db.ref('orders/'+key).update(updates);
-      saveBtn.textContent = 'Saved';
-      setTimeout(()=> saveBtn.textContent='Save', 1200);
-    });
-
-    delBtn.addEventListener('click', async ()=>{
-      if(confirm('Delete this order?')){
-        await db.ref('orders/'+key).remove();
+  // actions
+  tbody.addEventListener('click', async (e)=>{
+    const tr = e.target.closest('tr');
+    if(!tr) return;
+    const id = tr.dataset.id;
+    if(e.target.matches('[data-act="del"]')){
+      if(confirm('Delete order '+id+'?')){
+        await db.ref('orders/'+id).remove();
       }
-    });
-  }
-
-  function render(snapshot){
-    tbody.innerHTML='';
-    const arr = [];
-    snapshot.forEach(ch=> arr.push({key: ch.key, val: ch.val()}));
-    // newest first
-    arr.sort((a,b)=> (b.val.createdAt||0) - (a.val.createdAt||0));
-    for(const {key,val} of arr){
-      const tmp = document.createElement('tbody');
-      tmp.innerHTML = rowTemplate(key,val);
-      const tr = tmp.firstElementChild;
-      tbody.appendChild(tr);
-      bindRow(tr, key);
+      return;
     }
-  }
+    if(e.target.matches('[data-act="save"]')){
+      const selects = tr.querySelectorAll('select');
+      const upd = {};
+      selects.forEach(s => upd[s.getAttribute('data-field')] = s.value);
+      await db.ref('orders/'+id).update(upd);
+      alert('Saved.');
+      return;
+    }
+  });
 
-  // Live updates
-  db.ref('orders').on('value', render);
 })();

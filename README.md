@@ -1,70 +1,42 @@
-# Brownie Bite — Orders + Admin (Firebase Realtime DB)
 
-This is a lightweight storefront for **Brownie Bite** with UPI deep links and a simple admin panel.
+# Brownie Bite — Orders (Firebase Realtime DB)
 
-## Features
-
-- Brand font: **Ravie**-style (system fallback included)
-- Auto **Order ID** generation (e.g., `BB-20250824-1234`)
-- **Auto total** calculation by product × quantity
-- Payment options:
-  - **GPay**, **PhonePe**, **Paytm**, **FamPay** (UPI deep links with amount & order ID prefilled)
-  - **COD** (Cash on Delivery)
-- **Track Order** by ID (shows order status + payment status)
-- Admin panel
-  - Login via **username + pin** (front-end only)
-  - View all orders in a table
-  - Update **Order Status** (Pending, Preparing, Prepared, Out for Delivery, Delivered, Cancelled)
-  - Update **Payment Status** (Pending (COD), Pending (UPI), Paid)
-  - **Delete** orders
-  - **Logout** button
-- Thank You page showing the **Order ID**
+This repo contains a simple customer order page and an admin dashboard.
 
 ## Files
+- `index.html` — customer page (auto total, UPI/COD, order-id popup, tracking)
+- `style.css` — styles
+- `firebaseConfig.js` — your Firebase keys (already filled)
+- `script.js` — client logic for saving orders + UPI deep links
+- `thankyou.html` — shows Order ID after ordering
+- `login.html` — admin login (username + PIN)
+- `admin.html` — admin dashboard (view/update/delete orders)
+- `admin.js` — admin logic
 
-- `index.html` — Customer order page
-- `thankyou.html` — Success page
-- `login.html` — Admin login
-- `admin.html` — Admin table
-- `style.css` — Styling
-- `firebaseConfig.js` — Your Firebase configuration
-- `script.js` — Customer side logic
-- `admin.js` — Admin side logic
+## Credentials
+- Username: **BROWNIE BITES**
+- PIN: **BROWNIEbites@463235_6432**
 
-## Firebase Setup
+## Firebase
+Realtime Database rules (open so customers can write orders & track status):
+```json
+{
+  "rules": {
+    "orders": { ".read": true, ".write": true },
+    "admin":  { ".read": "auth != null", ".write": "auth != null" }
+  }
+}
+```
+> Later, you can restrict writes to orders via Cloud Functions or CAPTCHA.
 
-1. Realtime Database → Create database → start in **Locked mode**.
-2. Rules (for quick demo; restrict later):
-   ```json
-   {
-     "rules": {
-       "orders": { ".read": true, ".write": true }
-     }
-   }
-   ```
-3. Copy your web config into `firebaseConfig.js` (already added here).
+Database paths:
+- Orders are saved under `/orders/{orderId}`.
 
-> ⚠️ Security: These rules are **open** so the site works without auth. Before going live, add auth or server-side validation and restrict rules appropriately.
-
-## UPI Notes
-
-- We construct links like:
-  ```
-  upi://pay?pa=9380248566@fam&pn=Brownie%20Bite&am=123&cu=INR&tn=Order%20BB-...&tr=BB-...
-  ```
-- iOS handling of custom schemes varies by browser. We also provide per‑app schemes (tez://, phonepe://, paytmmp://) and fallback to `upi://pay`.
-- After attempting to open the app, we redirect to `thankyou.html?orderId=...` as a fallback.
-
-## Admin Login
-
-- **Username:** `BROWNIE BITES`
-- **Pin:** `BROWNIEbites@463235_6432`
-
-You can change them inside `login.html`.
+## UPI Deep Links
+We generate `upi://pay?pa=9380248566@fam&pn=Brownie%20Bite&am={total}&cu=INR&tn={OrderId}`
+Buttons for: GPay, PhonePe, Paytm, BHIM, FamPay, Other UPI.
+Mobile browsers should open the app if installed; desktop will usually do nothing.
 
 ## Deploy
-
-- GitHub Pages: push files to your repo root (or `/docs`) and enable Pages.
-- Verify that `index.html`, `firebaseConfig.js`, `script.js` load over HTTPS.
-
-Enjoy! 🍫
+Upload everything to your GitHub Pages repo (root). Ensure `firebaseConfig.js` is included.
+Open `index.html` to test. Place an order; check it appears in `admin.html` after login.

@@ -5,15 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Brownie Bite — Order Online</title>
   <link rel="stylesheet" href="style.css"/>
-  <!-- Firebase v8 (CDN) -->
+  <!-- Ravie is not web-safe; we approximate with fallback + allow local Ravie if installed -->
+  <style>@font-face{font-family:'Ravie';src:local('Ravie');font-display:swap}</style>
+  <!-- Firebase v8 -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script src="firebaseConfig.js"></script>
 </head>
 <body>
   <header>
-    <div class="brand">Brownie Bite</div>
-    <div class="tag">Freshly baked • Homemade with love • Delivered to your door</div>
+    <div class="container" style="padding:0">
+      <div class="brand">Brownie Bite</div>
+      <div class="tag">Freshly baked • Homemade with love • Delivered to your door</div>
+    </div>
   </header>
 
   <main class="container">
@@ -23,11 +27,11 @@
         <div class="row">
           <div>
             <label for="name">Name *</label>
-            <input id="name" required/>
+            <input id="name" required />
           </div>
           <div>
             <label for="phone">Phone *</label>
-            <input id="phone" inputmode="tel" pattern="[0-9+\-() ]{7,}" required/>
+            <input id="phone" inputmode="tel" pattern="[0-9+\-() ]{7,}" required />
           </div>
         </div>
 
@@ -35,7 +39,7 @@
         <textarea id="address" required></textarea>
 
         <label for="email">Email (optional)</label>
-        <input id="email" type="email" placeholder="name@example.com"/>
+        <input id="email" type="email" placeholder="name@example.com" />
 
         <div class="row">
           <div>
@@ -44,32 +48,41 @@
               <option value="Classic" data-price="40">Classic Brownie — ₹40</option>
               <option value="Walnut" data-price="50">Walnut Brownie — ₹50</option>
               <option value="Oreo" data-price="50">Oreo Brownie — ₹50</option>
-              <option value="ChocoChip" data-price="50">Choco‑chip Brownie — ₹50</option>
+              <option value="ChocoChip" data-price="50">Choco-chip Brownie — ₹50</option>
             </select>
           </div>
           <div>
             <label for="qty">Quantity *</label>
-            <input id="qty" type="number" min="1" value="1" required/>
+            <input id="qty" type="number" min="1" value="1" required />
           </div>
         </div>
 
         <p class="price-line">Total: <span id="totalAmt">₹40</span></p>
-        <p class="small">Pricing auto‑updates when you change product or quantity.</p>
+        <p class="small">Pricing auto-updates when you change product or quantity.</p>
 
-        <hr class="soft"/>
+        <hr class="soft" style="margin:10px 0 14px;border:0;border-top:1px solid #2a2c39"/>
 
         <label>Payment Method *</label>
-        <div class="pay-grid">
-          <button type="button" class="btn btn-secondary pay-btn" data-app="gpay">Pay with GPay</button>
-          <button type="button" class="btn btn-secondary pay-btn" data-app="phonepe">Pay with PhonePe</button>
-          <button type="button" class="btn btn-secondary pay-btn" data-app="paytm">Pay with Paytm</button>
-          <button type="button" class="btn btn-secondary pay-btn" data-app="fampay">Pay with FamPay</button>
-          <button type="button" class="btn" id="codBtn">Cash on Delivery (COD)</button>
+        <div class="row">
+          <label><input type="radio" name="pay" value="COD" checked /> Cash on Delivery (COD)</label>
+          <label><input type="radio" name="pay" value="UPI" /> UPI (GPay/PhonePe/BHIM/FamPay/Paytm)</label>
         </div>
-        <div class="notice small">Note: Some iOS browsers may ask which app to open for UPI links.</div>
+
+        <div id="upiChooser" class="card" style="margin-top:10px; display:none; padding:12px">
+          <h3>Select your UPI app</h3>
+          <div class="actions">
+            <button type="button" class="btn-secondary" data-upiapp="gpay">Google Pay</button>
+            <button type="button" class="btn-secondary" data-upiapp="phonepe">PhonePe</button>
+            <button type="button" class="btn-secondary" data-upiapp="paytm">Paytm</button>
+            <button type="button" class="btn-secondary" data-upiapp="bhim">BHIM</button>
+            <button type="button" class="btn-secondary" data-upiapp="fampay">FamPay</button>
+            <button type="button" class="btn-secondary" data-upiapp="generic">Other UPI</button>
+          </div>
+          <p class="small">Your amount and Order ID will be filled in the payment note (where supported).</p>
+        </div>
 
         <div class="actions" style="margin-top:12px">
-          <button type="submit" class="btn" id="placeBtn">🍫 Place Order</button>
+          <button type="submit" class="btn">🍫 Place Order</button>
         </div>
       </form>
     </section>
@@ -88,16 +101,26 @@
     © 2025 Brownie Bite • Happiness in every bite
   </footer>
 
-  <!-- Thank You Modal (used for COD immediate feedback) -->
+  <!-- Thank You Modal -->
   <div id="thanksModal">
     <div class="modal-card">
       <h3>Thank you! 🎉</h3>
       <p>Your order has been placed.</p>
       <p><b>Order ID:</b> <span id="popOrderId"></span></p>
       <p class="small">Use this ID in <b>Track Your Order</b> to see live status.</p>
-      <div class="actions">
-        <a href="thankyou.html" class="btn">Go to Thank You</a>
-        <button class="btn btn-secondary" id="closeModal">Close</button>
+      <div id="postOrderUPI" style="display:none">
+        <p class="small">Tap your app to pay now:</p>
+        <div class="actions">
+          <a id="goGPay" class="btn btn-secondary" target="_blank" rel="noopener">Google Pay</a>
+          <a id="goPhonePe" class="btn btn-secondary" target="_blank" rel="noopener">PhonePe</a>
+          <a id="goPaytm" class="btn btn-secondary" target="_blank" rel="noopener">Paytm</a>
+          <a id="goBHIM" class="btn btn-secondary" target="_blank" rel="noopener">BHIM</a>
+          <a id="goFamPay" class="btn btn-secondary" target="_blank" rel="noopener">FamPay</a>
+          <a id="goGeneric" class="btn btn-secondary" target="_blank" rel="noopener">Other UPI</a>
+        </div>
+      </div>
+      <div class="actions" style="margin-top:12px">
+        <a class="btn" id="closeModal">OK</a>
       </div>
     </div>
   </div>

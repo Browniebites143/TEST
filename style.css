@@ -1,49 +1,60 @@
-/* style.css */
+
+/* ========== Brownie Bite - Styles ========== */
 :root{
-  --brand:#4b2e2e;
-  --accent:#8b4513;
-  --bg:#fff9f6;
-  --card:#ffffff;
-  --muted:#6b6b6b;
-  --ok:#0a7e07;
-  --warn:#b26b00;
-  --danger:#b00020;
-  --btn:#2e2a25;
+  --bg:#0f0f12;
+  --card:#1a1b22;
+  --muted:#9aa0a6;
+  --text:#eef1f6;
+  --accent:#ffb300;
+  --accent-2:#7c4dff;
+  --success:#0ecb81;
+  --danger:#ef5350;
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:#1a1a1a;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif}
-header{padding:18px 16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #eee;background:#fff;position:sticky;top:0;z-index:10}
-.brand{font-family:"Ravie","Copperplate","Trebuchet MS",cursive;font-size:24px;color:var(--brand);letter-spacing:.5px}
-.tag{font-size:12px;color:var(--muted)}
-.container{max-width:980px;margin:18px auto;padding:0 16px}
-.card{background:var(--card);border:1px solid #eee;border-radius:12px;padding:16px 16px 18px 16px;box-shadow:0 3px 10px rgba(0,0,0,.04)}
-h2{margin:0 0 12px 0;color:var(--brand)}
-label{font-weight:600;font-size:13px;color:#333;display:block;margin:.35rem 0}
-input,select,textarea{width:100%;padding:10px 12px;border:1px solid #ddd;border-radius:10px;background:#fff;font-size:14px}
-textarea{min-height:84px;resize:vertical}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+a{color:inherit;text-decoration:none}
+header{padding:22px 16px;border-bottom:1px solid #242634;background:linear-gradient(180deg,#14151b 0%, #0f1015 100%)}
+.container{max-width:980px;margin:0 auto;padding:18px 16px}
+.brand{font-family:'Ravie', 'Segoe UI', Tahoma, sans-serif;letter-spacing:.5px;
+       font-size:34px;line-height:1.1;background:linear-gradient(90deg,#ffd180,#ffb300,#ff6f00);
+       -webkit-background-clip:text;background-clip:text;color:transparent;user-select:none}
+.tag{color:var(--muted);font-size:13px;margin-top:6px}
+
+.card{background:var(--card);border:1px solid #2a2c39;border-radius:14px;padding:16px 16px 18px}
+.card h2{margin:0 0 8px 0;font-size:20px}
+.card h3{margin:8px 0 8px 0;font-size:16px;color:var(--muted)}
+
+label{font-size:13px;color:#cfd3dc;margin-bottom:6px;display:block}
+input,select,textarea{
+  width:100%;padding:10px 12px;border-radius:10px;border:1px solid #2b2d3a;background:#12131a;
+  color:var(--text);outline:none
+}
+textarea{min-height:92px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media(max-width:680px){.row{grid-template-columns:1fr}}
-.price-line{font-weight:700;margin:8px 0}
-.small{font-size:12px;color:var(--muted)}
-.soft{border:none;border-top:1px dashed #e5e5e5;margin:10px 0}
+@media (max-width:720px){.row{grid-template-columns:1fr}}
+
+.price-line{font-weight:700;font-size:16px;margin:8px 0}
+.small{color:var(--muted);font-size:12px}
+
+.btn{display:inline-block;border:0;background:var(--accent);color:#2b1900;padding:10px 14px;border-radius:10px;
+     font-weight:700;cursor:pointer}
+.btn-secondary{background:#2b2d3a;color:#e5e7ee;border:1px solid #3a3d4f}
+.btn-danger{background:var(--danger);color:#fff}
+
 .actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{background:var(--btn);color:#fff;border:none;padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer}
-.btn-secondary{background:#ece8e3;color:#2b2118}
-.btn-danger{background:var(--danger)}
-.btn[disabled]{opacity:.6;cursor:not-allowed}
-.pay-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-footer{margin:30px 0 40px;color:var(--muted);text-align:center}
-/* modal */
-#thanksModal{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;padding:16px}
-.modal-card{background:#fff;border-radius:12px;max-width:420px;width:100%;padding:18px;box-shadow:0 12px 32px rgba(0,0,0,.25)}
-/* admin table */
-.table{width:100%;border-collapse:separate;border-spacing:0 8px}
-.table thead th{font-size:12px;color:#555;text-align:left;padding:6px 8px}
-.table tbody tr{background:#fff;border:1px solid #eee}
-.table tbody td{padding:8px}
-.badge{font-size:12px;padding:3px 8px;border-radius:999px;display:inline-block;background:#f4f4f4}
-.badge.paid{background:#e7f7ea;color:#0a7e07}
-.badge.pending{background:#fff3cd;color:#7a5d00}
-.logout{margin-left:auto}
-/* notice */
-.notice{background:#fff7e5;border:1px solid #ffe2a6;padding:8px 12px;border-radius:10px;color:#7a5d00;margin:8px 0}
+
+footer{padding:30px 16px;color:var(--muted);text-align:center;border-top:1px solid #222432;margin-top:24px}
+
+/* Modal */
+#thanksModal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:50}
+.modal-card{width:min(520px,92vw);background:var(--card);border:1px solid #2a2c39;border-radius:16px;padding:18px}
+.modal-card h3{margin-top:0}
+
+/* Admin table */
+.table{width:100%;border-collapse:collapse}
+.table th,.table td{border-bottom:1px solid #2a2c39;padding:10px;text-align:left;font-size:14px}
+.table th{color:#cfd3dc}
+.badge{padding:3px 8px;border-radius:999px;font-size:12px;border:1px solid #3a3d4f;background:#15161d}
+.badge.paid{border-color:#1f7a58;color:#b6f3d7}
+.badge.pending{border-color:#6b7280;color:#e5e7ee}
+.badge.cod{border-color:#7c4dff;color:#d8ccff}

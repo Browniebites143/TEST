@@ -1,7 +1,6 @@
-// firebaseConfig.js
-// Your Firebase Web SDK v8 configuration
-// (Safe for public front-end use; keep DB rules restrictive in Firebase console)
-window.FB_CONFIG = {
+
+// Brownie Bite - Firebase Config (your live keys)
+window.firebaseConfig = {
   apiKey: "AIzaSyDQx7NoByf0jTRhK3qy0znE0rABtENA61s",
   authDomain: "browniebites-54ddb.firebaseapp.com",
   databaseURL: "https://browniebites-54ddb-default-rtdb.asia-southeast1.firebasedatabase.app",
